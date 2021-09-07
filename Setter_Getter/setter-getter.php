@@ -1,0 +1,152 @@
+<?php
+
+class Produk
+{
+    private $judul;
+    private $penulis;
+    private $penerbit;
+    private $harga;
+
+    protected $diskon;
+
+    public function __construct($judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0)
+    {
+        $this->judul = $judul;
+        $this->penulis = $penulis;
+        $this->penerbit = $penerbit;
+        $this->harga = $harga;
+    }
+
+    public function setJudul($judul)
+    {
+        $this->judul = $judul;
+    }
+
+    public function getJudul()
+    {
+        return $this->judul;
+    }
+
+    public function setPenulis($penulis)
+    {
+        $this->penulis = $penulis;
+    }
+
+    public function getPenulis()
+    {
+        return $this->penulis;
+    }
+
+    public function setPenerbit($penerbit)
+    {
+        $this->penerbit = $penerbit;
+    }
+
+    function getPenerbit()
+    {
+        return $this->penulis;
+    }
+
+    public function setHarga($harga)
+    {
+        $this->harga = $harga;
+    }
+
+    function getDiskon($diskon)
+    {
+        return $this->diskon;
+    }
+
+    public function setDiskon($diskon)
+    {
+        $this->diskon = $diskon;
+    }
+
+    public function getHarga()
+    {
+        return $this->harga - ($this->harga * $this->diskon / 100);
+    }
+
+    public function getLabel()
+    {
+        return "$this->penulis, $this->penerbit";
+    }
+
+    public function getInfoProduk()
+    {
+        // komik : Naruto | Mashashi Kishimoto, Shonen Jump (Rp. 30000) - 100 Halaman.
+        // Game : Uncharted | Neil Druckman, Sonu Computer (Rp. 250000) ~ 50 Jam.
+        $str = "{$this->judul} | {$this->getLabel()} (Rp. {$this->harga})";
+        return $str;
+    }
+}
+
+class Komik extends Produk
+{
+    public $jmlHalaman;
+
+    public function __construct($judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0, $jmllHalaman = 0)
+    {
+        parent::__construct($judul, $penulis, $penerbit, $harga);
+        $this->jmlHalaman = $jmllHalaman;
+    }
+
+    public function getInfoProduk()
+    {
+        $str = "Komik : " . parent::getInfoProduk() . " - {$this->jmlHalaman} Halaman.";
+        return $str;
+        // $this itu artinya instance class yang bersangkutan
+        // parent:: karena dia bukan variable kita gak bisa masukin ke kurung kurawal
+        // mau gak mau kita harus concat
+    }
+}
+
+class Game extends Produk
+{
+    public $waktuMain;
+
+    public function __construct($judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0, $waktuMain = 0)
+    {
+        parent::__construct($judul, $penulis, $penerbit, $harga);
+        $this->waktuMain = $waktuMain;
+    }
+
+
+
+    public function getInfoProduk()
+    {
+        // $str = "Game : {$this->judul} | {$this->getLabel()} (Rp. {$this->harga}) ~ {$this->waktuMain} Jam.";
+        $str = "Game : " . parent::getInfoProduk() . " ~ {$this->waktuMain} Jam.";
+        return $str;
+    }
+}
+
+class CetakInfoProduk
+{
+    public function cetak(Produk $produk)
+    {
+        if ($produk->satuan == "50 Jam") {
+            $str = "{$produk->judul} | {$produk->getlabel()} (Rp. {$produk->harga}) ~ {$produk->satuan}";
+        } else {
+            $str = "{$produk->judul} | {$produk->getlabel()} (Rp. {$produk->harga}) - {$produk->satuan}";
+        }
+        return $str;
+    }
+}
+
+
+
+$produk1 = new Komik("Naruto", "Masashi Kishimoto", "Shonen Jump", 30000, 100);
+// $produk1 = new Komik();
+$produk2 = new Game("Uncharted", "Neil Druckmann", "Sony Computer", 250000, 50);
+
+echo $produk1->getInfoProduk();
+echo "<br>";
+echo $produk2->getInfoProduk();
+echo "<hr>";
+
+$produk2->setDiskon(50);
+echo $produk2->getHarga();
+echo "<hr>";
+$produk1->setPenulis("Sandhika Galih");
+echo $produk1->getPenulis();
